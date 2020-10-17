@@ -9,7 +9,7 @@ github_email=${GITHUB_EMAIL}
 
 # secrets
 github_token=$(cat ${GITHUB_TOKEN_FILE:-/work/secrets/github_token})
-signing_key_file=$(cat ${SIGNING_KEY_FILE:-/work/secrets/signingkey.asc})
+signing_key_file=${SIGNING_KEY_FILE:-/work/secrets/signingkey.asc}
 gpg_keyname=$(cat ${GPG_KEYNAME_FILE:-/work/secrets/gpg_keyname})
 gpg_key_passphrase=$(cat ${GPG_KEY_PASSPHRASE:-/work/secrets/gpg_key_passphrase})
 
