@@ -1,4 +1,7 @@
-# Basic release tool for a Java 8 package including a push to Maven Central
+# Basic release tool for a Java 8 package including a push to Maven Central 
+![Build and push to Dockerhub](https://github.com/brobert83/basic-java8-release/workflows/Build%20and%20push%20to%20Dockerhub/badge.svg)
+
+Published here: https://hub.docker.com/r/robertbaboi/basic-java8-release
 
 The purpose of this container is to perform a "Release" of a Java 8 package built with Maven and push it to Maven Central.
 
@@ -28,7 +31,7 @@ docker run \
    -e GITHUB_EMAIL=${github_email} \
    -v $(pwd)/../secrets:/work/secrets \
    -v $(pwd)/.m2:/root/.m2 \
-  robertbaboi/basic-release-java8-maven
+  robertbaboi/basic-java8-release
 ```
 
 # What does it do
