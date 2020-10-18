@@ -1,5 +1,7 @@
 # Basic release tool for a Java 8 package including a push to Maven Central 
 ![Build and push to Dockerhub](https://github.com/brobert83/basic-java8-release/workflows/Build%20and%20push%20to%20Dockerhub/badge.svg)
+![Docker Image Size (tag)](https://img.shields.io/docker/image-size/robertbaboi/basic-java8-release/latest)
+![Apache License, Version 2.0, January 2004](https://img.shields.io/github/license/apache/maven.svg?label=License)
 
 Published here: https://hub.docker.com/r/robertbaboi/basic-java8-release
 
