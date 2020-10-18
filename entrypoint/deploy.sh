@@ -13,6 +13,9 @@ signing_key_file=${SIGNING_KEY_FILE:-/work/secrets/signingkey.asc}
 gpg_keyname=$(cat ${GPG_KEYNAME_FILE:-/work/secrets/gpg_keyname})
 gpg_key_passphrase=$(cat ${GPG_KEY_PASSPHRASE:-/work/secrets/gpg_key_passphrase})
 
+SONATYPE_USERNAME=$(cat ${SONATYPE_USERNAME})
+SONATYPE_PASSWORD=$(cat ${SONATYPE_PASSWORD})
+
 deploy=${DEPLOY}
 
 # ======================================================================================================================
@@ -79,10 +82,9 @@ function deploy(){
 
   info "Importing keys to keyring"
 
-  gpg2 --keyring=pubring.gpg --no-default-keyring --import --batch ${signing_key_file}
-  gpg2 --allow-secret-key-import --keyring=secring.gpg --no-default-keyring --import --batch ${signing_key_file}
+  gpg2 --allow-secret-key-import --no-default-keyring --import --batch ${signing_key_file}
 
-  info "Deploing to Maven Central"
+  info "Deploying to Maven Central"
 
   mvn clean deploy \
     -DskipTests=true \
@@ -90,9 +92,7 @@ function deploy(){
     --settings /work/settings.xml \
     -Dgpg.executable=gpg2 \
     -Dgpg.keyname=${gpg_keyname} \
-    -Dgpg.passphrase=${gpg_key_passphrase} \
-    -Dgpg.publicKeyring=pubring.gpg \
-    -Dgpg.secretKeyring=secring.gpg
+    -Dgpg.passphrase=${gpg_key_passphrase}
 }
 
 # ======================================================================================================================
@@ -158,10 +158,10 @@ info "    branch: ${github_branch}"
 
 {
   if [[ ${deploy} == "yes" ]]; then
-    info "6. Deploing"
+    info "6. Deploying"
     deploy
   else
-    info "[SKIPPED] 6. Deploing"
+    info "[SKIPPED] 6. Deploying"
   fi
 } &&
 
