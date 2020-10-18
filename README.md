@@ -7,20 +7,20 @@ Published here: https://hub.docker.com/r/robertbaboi/basic-java8-release
 
 The purpose of this container is to perform a "Release" of a Java 8 package built with Maven and push it to Maven Central.
 
-| Env Variable       | Default value                     | Required | Comments                   
-|:-------------      |:--------------                    |:---------|------------------- 
-| DEPLOY             | yes                               |          | To skip `mvn deploy` just override this with anything other than `yes`
-| RELEASE_TYPE       | PATCH                             |          | Must be PATCH, MINOR or MAJOR (case insensitive)                     
-| GITHUB_REPO        |                                   |  YES     |                    
-| GITHUB_BRANCH      | master                            |          |                    
-| GITHUB_USERNAME    |                                   |  YES     |                    
-| GITHUB_EMAIL       |                                   |  YES     |                    
-| GITHUB_TOKEN_FILE  | /work/secrets/github_token        |          |                    
-| SIGNING_KEY_FILE   | /work/secrets/signingkey.asc      |          |                    
-| GPG_KEYNAME_FILE   | /work/secrets/gpg_keyname         |          |                    
-| GPG_KEY_PASSPHRASE | /work/secrets/gpg_key_passphrase  |          |                    
-| SONATYPE_USERNAME  | /work/secrets/sonatype_username   |          |                    
-| SONATYPE_PASSWORD  | /work/secrets/sonatype_password   |          |                    
+| Env Variable            | Default value                     | Required | Comments                   
+|:-------------           |:--------------                    |:---------|------------------- 
+| DEPLOY                  | yes                               |          | To skip `mvn deploy` just override this with anything other than `yes`
+| RELEASE_TYPE            | PATCH                             |          | Must be PATCH, MINOR or MAJOR (case insensitive)                     
+| GITHUB_REPO             |                                   |  YES     |                    
+| GITHUB_BRANCH           | master                            |          |                    
+| GITHUB_USERNAME         |                                   |  YES     |                    
+| GITHUB_EMAIL            |                                   |  YES     |                    
+| GITHUB_TOKEN_FILE       | /work/secrets/github_token        |          |                    
+| SIGNING_KEY_FILE        | /work/secrets/signingkey.asc      |          |                    
+| GPG_KEY_NAME_FILE       | /work/secrets/gpg_keyname         |          |                    
+| GPG_KEY_PASSPHRASE_FILE | /work/secrets/gpg_key_passphrase  |          |                    
+| SONATYPE_USERNAME_FILE  | /work/secrets/sonatype_username   |          |                    
+| SONATYPE_PASSWORD_FILE  | /work/secrets/sonatype_password   |          |                    
 
 ## Example
 - The .m2 volume is mounted to avoid downloading the dependencies every time

@@ -1,20 +1,58 @@
 #!/bin/bash
 
+function checkRequiredEnv(){
+
+  local missing=0
+
+  for required_var in "GITHUB_EMAIL" "GITHUB_USERNAME" "GITHUB_REPO"; do
+    [[ ! ${!required_var} ]] && error "Required environement variable missing: ${required_var}" && missing=1
+  done
+
+  [[ ${missing} == 1 ]] && exit 1
+}
+
+function checkSecrets(){
+
+  local missing=0
+
+  for required_secret in \
+        "SONATYPE_USERNAME_FILE"\
+        "SONATYPE_PASSWORD_FILE"\
+        "GITHUB_TOKEN_FILE"\
+        "SIGNING_KEY_FILE"\
+        "GPG_KEY_NAME_FILE"\
+        "GPG_KEY_PASSPHRASE_FILE"; do
+    [[ ! -f ${!required_secret} ]] && error "Required secret file missing : ${!required_secret}" && missing=1
+  done
+
+  [[ ${missing} == 1 ]] && exit 1
+}
+
 release_type=$(echo ${RELEASE_TYPE} | tr '[:lower:]' '[:upper:]')
+
+checkRequiredEnv
 
 github_repo=${GITHUB_REPO}
 github_branch=${GITHUB_BRANCH}
 github_username=${GITHUB_USERNAME}
 github_email=${GITHUB_EMAIL}
 
-# secrets
-github_token=$(cat ${GITHUB_TOKEN_FILE:-/work/secrets/github_token})
-signing_key_file=${SIGNING_KEY_FILE:-/work/secrets/signingkey.asc}
-gpg_keyname=$(cat ${GPG_KEYNAME_FILE:-/work/secrets/gpg_keyname})
-gpg_key_passphrase=$(cat ${GPG_KEY_PASSPHRASE:-/work/secrets/gpg_key_passphrase})
+# set default values
+GITHUB_TOKEN_FILE=${GITHUB_TOKEN_FILE:-/work/secrets/github_token}
+SIGNING_KEY_FILE=${SIGNING_KEY_FILE:-/work/secrets/signingkey.asc}
+GPG_KEY_NAME_FILE=${GPG_KEY_NAME_FILE:-/work/secrets/gpg_keyname}
+GPG_KEY_PASSPHRASE_FILE=${GPG_KEY_PASSPHRASE_FILE:-/work/secrets/gpg_key_passphrase}
+SONATYPE_USERNAME_FILE=${SONATYPE_USERNAME_FILE:-/work/secrets/sonatype_username}
+SONATYPE_PASSWORD_FILE=${SONATYPE_PASSWORD_FILE:-/work/secrets/sonatype_password}
 
-SONATYPE_USERNAME=$(cat ${SONATYPE_USERNAME})
-SONATYPE_PASSWORD=$(cat ${SONATYPE_PASSWORD})
+checkSecrets
+
+github_token=$(cat ${GITHUB_TOKEN_FILE})
+signing_key_file=${SIGNING_KEY_FILE}
+gpg_keyname=$(cat ${GPG_KEY_NAME_FILE})
+gpg_key_passphrase=$(cat ${GPG_KEY_PASSPHRASE_FILE})
+SONATYPE_USERNAME=$(cat ${SONATYPE_USERNAME_FILE})
+SONATYPE_PASSWORD=$(cat ${SONATYPE_PASSWORD_FILE})
 
 deploy=${DEPLOY}
 
@@ -36,34 +74,6 @@ function info(){
 
 function error(){
   out "$1" ${RED}
-}
-
-function checkRequiredEnv(){
-
-  local missing=0
-
-  for required_var in "GITHUB_EMAIL" "GITHUB_USERNAME" "GITHUB_REPO"; do
-    [[ ! ${!required_var} ]] && error "Required environement variable missing: ${required_var}" && missing=1
-  done
-
-  [[ ${missing} == 1 ]] && exit 1
-}
-
-function checkSecrets(){
-
-  local missing=0
-
-  for required_secret in \
-        "SONATYPE_USERNAME"\
-        "SONATYPE_PASSWORD"\
-        "GITHUB_TOKEN_FILE"\
-        "SIGNING_KEY_FILE"\
-        "GPG_KEYNAME_FILE"\
-        "GPG_KEY_PASSPHRASE"; do
-    [[ ! -f ${!required_secret} ]] && error "Required secret file missing : ${!required_secret}" && missing=1
-  done
-
-  [[ ${missing} == 1 ]] && exit 1
 }
 
 function nextVersion(){
@@ -97,8 +107,6 @@ function deploy(){
 
 # ======================================================================================================================
 
-checkRequiredEnv && checkSecrets
-
 info "Starting release:"
 info "    type:   ${release_type}"
 info "    repo:   ${github_repo}"
@@ -116,7 +124,7 @@ info "    branch: ${github_branch}"
 } &&
 
 {
-  info "2. Identifing version"
+  info "2. identifying version"
 
   VERSION_REGEX="^([0-9]+)\.([0-9]+)\.([0-9]+)\-SNAPSHOT$"
 
