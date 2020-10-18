@@ -51,7 +51,7 @@ docker run \
 4. Change version to the `${release_version}`        
 5. Build
 6. Deploy
-    - runs 
+    - runs:
         ```bash
         mvn clean deploy \
           -DskipTests=true \
@@ -59,9 +59,7 @@ docker run \
           --settings /work/settings.xml \
           -Dgpg.executable=gpg2 \
           -Dgpg.keyname=${gpg_keyname} \
-          -Dgpg.passphrase=${gpg_key_passphrase} \
-          -Dgpg.publicKeyring=pubring.gpg \
-          -Dgpg.secretKeyring=secring.gpg
+          -Dgpg.passphrase=${gpg_key_passphrase}
         ```
     - as long as pom.xml is properly configured this will push to Maven Central
     - notice that this command activates the `release` profile
